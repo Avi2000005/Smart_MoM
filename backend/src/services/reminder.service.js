@@ -1,67 +1,73 @@
 const cron = require("node-cron");
 const Meeting = require("../models/meeting.model");
-const User = require("../models/user.model");
-const Notification = require("../models/notification.model");
-const sendEmail = require("../utils/email");
+const notify = require("../utils/notification.helper");
 
-function startReminderService(){
+function startReminderService() {
+  cron.schedule("0 9 * * *", async () => {
+    console.log("⏰ Running daily reminder check...");
 
-cron.schedule("0 9 * * *", async () => {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-  console.log("Checking task deadlines...");
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
 
-  const today = new Date();
-  const tomorrow = new Date();
+      const meetings = await Meeting.find({});
 
-  tomorrow.setDate(today.getDate() + 1);
+      for (const meeting of meetings) {
 
-  const meetings = await Meeting.find({
-  "tasks.deadline": { $exists:true }
-});
+        // ── Meeting reminder (1 day before) ──────────────────────────
+        const meetingDate = new Date(meeting.date);
+        meetingDate.setHours(0, 0, 0, 0);
 
-  for(const meeting of meetings){
-
-    for(const task of meeting.tasks){
-
-      if(!task.completed && task.deadline){
-
-        const deadline = new Date(task.deadline);
-
-        if(deadline.toDateString() === tomorrow.toDateString()){
-
-          const user = await User.findById(task.assignedTo);
-
-          if(user){
-
-            const message = `Reminder: Your task "${task.title}" deadline is tomorrow.`;
-
-            // send email
-            await sendEmail(
-              user.email,
-              "Task Deadline Reminder",
-              message
+        if (meetingDate.getTime() === tomorrow.getTime()) {
+          for (const participantId of meeting.participants || []) {
+            await notify(
+              participantId,
+              `📅 Reminder: Meeting "${meeting.title}" is scheduled for tomorrow (${new Date(meeting.date).toLocaleDateString()}).`,
+              "meeting_reminder",
+              meeting._id
             );
-
-            // save in-app notification
-            await Notification.create({
-              user:user._id,
-              message:message
-            });
-
-            console.log("Reminder sent to",user.email);
-
           }
-
         }
 
+        // ── Task checks ───────────────────────────────────────────────
+        for (const task of meeting.tasks || []) {
+          if (task.completed || !task.deadline || !task.assignedTo) continue;
+
+          const deadline = new Date(task.deadline);
+          deadline.setHours(0, 0, 0, 0);
+
+          // Deadline tomorrow
+          if (deadline.getTime() === tomorrow.getTime()) {
+            await notify(
+              task.assignedTo,
+              `⏰ Your task "${task.title}" in meeting "${meeting.title}" is due tomorrow (${new Date(task.deadline).toLocaleDateString()}).`,
+              "task_deadline",
+              meeting._id
+            );
+          }
+
+          // Overdue
+          if (deadline.getTime() < today.getTime()) {
+            await notify(
+              task.assignedTo,
+              `🚨 Your task "${task.title}" in meeting "${meeting.title}" is overdue! Please complete it ASAP.`,
+              "task_overdue",
+              meeting._id
+            );
+          }
+        }
       }
 
+      console.log("✅ Daily reminder check complete.");
+    } catch (error) {
+      console.error("Reminder service error:", error.message);
     }
+  });
 
-  }
-
-});
-
+  console.log("✅ Reminder service started — runs daily at 9:00 AM");
 }
 
 module.exports = startReminderService;

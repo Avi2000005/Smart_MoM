@@ -11,6 +11,7 @@ const notificationRoutes = require("./routes/notification.routes");
 const userRoutes = require("./routes/user.routes");
 
 const errorHandler = require("./middleware/error.middleware");
+const sendEmail = require("./utils/email");
 
 const app = express();
 
@@ -40,6 +41,8 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/api/notifications", notificationRoutes);
+
+
 
 
 // ---------------- Error Handler ----------------
