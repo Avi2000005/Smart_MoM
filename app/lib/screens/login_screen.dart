@@ -1,33 +1,34 @@
 // screens/login_screen.dart
- 
+
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'register_screen.dart';
 import 'otp_verification_screen.dart';
+import 'forgot_password_screen.dart'; // ← ADD THIS
 import '../services/auth_service.dart';
- 
+
 class LoginScreen extends StatefulWidget {
   final VoidCallback onLogin;
   const LoginScreen({super.key, required this.onLogin});
- 
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
- 
+
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
- 
+
   final _formKey  = GlobalKey<FormState>();
   final _userCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
- 
+
   bool _obscure = true;
   bool _loading = false;
- 
+
   late final AnimationController _animCtrl;
   late final Animation<double>   _fade;
   late final Animation<Offset>   _slide;
- 
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen>
     ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut));
     _animCtrl.forward();
   }
- 
+
   @override
   void dispose() {
     _animCtrl.dispose();
@@ -50,27 +51,21 @@ class _LoginScreenState extends State<LoginScreen>
     _passCtrl.dispose();
     super.dispose();
   }
- 
+
   Future<void> _login() async {
- 
     if (!(_formKey.currentState?.validate() ?? false)) return;
- 
     setState(() => _loading = true);
- 
     final res = await AuthService.login(_userCtrl.text.trim(), _passCtrl.text);
- 
     setState(() => _loading = false);
- 
     if (!mounted) return;
- 
+
     final msg = res["message"] as String? ?? "Something went wrong";
- 
+
     if (msg == "Login successful") {
       widget.onLogin();
       return;
     }
- 
-    // If email is not verified, redirect to OTP screen
+
     if (res["requiresVerification"] == true) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -88,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen>
       );
       return;
     }
- 
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
@@ -96,19 +91,28 @@ class _LoginScreenState extends State<LoginScreen>
       ),
     );
   }
- 
+
   void _openRegister() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const RegisterScreen()),
     );
   }
- 
+
+  // ── Open Forgot Password ─────────────────────────────────────────────────
+  void _openForgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ForgotPasswordScreen(onLogin: widget.onLogin),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
- 
     final isDark = Theme.of(context).brightness == Brightness.dark;
- 
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -154,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
- 
+
                           // ── Logo ─────────────────────────────────────────
                           Container(
                             width: 74,
@@ -176,24 +180,24 @@ class _LoginScreenState extends State<LoginScreen>
                               size: 38,
                             ),
                           ),
- 
+
                           const SizedBox(height: 22),
- 
+
                           Text(
                             'Smart MoM',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
- 
+
                           const SizedBox(height: 6),
- 
+
                           Text(
                             'Welcome back! Please login to continue.',
                             style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                           ),
- 
+
                           const SizedBox(height: 32),
- 
+
                           // ── Email ─────────────────────────────────────────
                           TextFormField(
                             controller: _userCtrl,
@@ -206,9 +210,9 @@ class _LoginScreenState extends State<LoginScreen>
                               prefixIcon: Icon(Icons.person_outline_rounded),
                             ),
                           ),
- 
+
                           const SizedBox(height: 16),
- 
+
                           // ── Password ──────────────────────────────────────
                           TextFormField(
                             controller: _passCtrl,
@@ -231,18 +235,40 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                             ),
                           ),
- 
-                          const SizedBox(height: 28),
- 
+
+                          // ── Forgot Password link ──────────────────────────
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: _openForgotPassword,
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 0),
+                              ),
+                              child: const Text(
+                                'Forgot Password?',
+                                style: TextStyle(
+                                  color: AppColors.primaryAccent,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 8),
+
                           // ── Login Button ──────────────────────────────────
                           SizedBox(
                             width: double.infinity,
                             child: _loading
-                                ? const Center(child: CircularProgressIndicator())
+                                ? const Center(
+                                    child: CircularProgressIndicator())
                                 : ElevatedButton(
                                     onPressed: _login,
                                     style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
                                     ),
                                     child: const Text(
                                       'Login',
@@ -250,9 +276,9 @@ class _LoginScreenState extends State<LoginScreen>
                                     ),
                                   ),
                           ),
- 
+
                           const SizedBox(height: 20),
- 
+
                           // ── Register link ─────────────────────────────────
                           GestureDetector(
                             onTap: _openRegister,

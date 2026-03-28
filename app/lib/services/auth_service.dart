@@ -76,6 +76,40 @@ class AuthService {
   static Future<Map<String, dynamic>> resendOTP(String email) async {
     return await ApiService.post("auth/resend-otp", {"email": email});
   }
+
+
+  // Add to your existing AuthService class
+
+static Future<void> forgotPassword(String email) async {
+  final res = await ApiService.post("auth/forgot-password", {"email": email});
+  if (res["message"] == null) throw Exception("Failed to send OTP");
+}
+
+static Future<String> verifyResetOtp(String email, String otp) async {
+  final res = await ApiService.post("auth/verify-reset-otp", {
+    "email": email,
+    "otp":   otp,
+  });
+  if (res["resetToken"] == null) {
+    throw Exception(res["message"] ?? "Invalid OTP");
+  }
+  return res["resetToken"];
+}
+
+static Future<void> resetPassword(
+  String email,
+  String resetToken,
+  String newPassword,
+) async {
+  final res = await ApiService.post("auth/reset-password", {
+    "email":       email,
+    "resetToken":  resetToken,
+    "newPassword": newPassword,
+  });
+  if (res["message"] != "Password reset successful. Please log in.") {
+    throw Exception(res["message"] ?? "Reset failed");
+  }
+}
  
   // ── Logout ─────────────────────────────────────────────────────────────────
  
