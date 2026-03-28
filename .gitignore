@@ -1,0 +1,53 @@
+# ───────── NODE (Backend) ─────────
+node_modules/
+backend/node_modules/
+backend/.env
+backend/*.log
+
+
+# ───────── GENERAL ─────────
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+Thumbs.db
+.vscode/
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# ───────── INTELLIJ / IDE ─────────
+*.iml
+*.ipr
+*.iws
+.idea/
+
+
+
+# ───────── FLUTTER / DART ─────────
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+# Flutter generated files
+app/.dart_tool/
+app/build/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+
+# ───────── ANDROID BUILD ─────────
+android/app/debug
+android/app/profile
+android/app/release
+
+# ───────── SYMBOLS / MAPS ─────────
+app.*.symbols
+app.*.map.json
