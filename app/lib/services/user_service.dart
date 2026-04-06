@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
 
-  static const String baseUrl = "http://127.0.0.1:5000/api/users";
+  static const String baseUrl = "https://smart-mom.onrender.com/users";
   //                                        ↑ Android emulator
   // Physical device → use your PC IP: http://192.168.x.x:5000/api/users
 
