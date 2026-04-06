@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { sendVerificationOTP, sendPasswordResetOTP } = require("../services/brevo.service");
+const { sendVerificationOTP, sendPasswordResetOTP } = require("../services/Brevo.service");
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
