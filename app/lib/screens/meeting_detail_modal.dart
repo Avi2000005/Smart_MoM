@@ -196,10 +196,15 @@ class _DiscussionCard extends StatelessWidget {
 
           const SizedBox(height: 10),
 
+          Text("Category : ${point.category}"),
+
+          const SizedBox(height: 6),
+
           if (point.action.isNotEmpty)
             Text("Action : ${point.action}"),
 
-          const SizedBox(height: 6),
+          if (point.action.isNotEmpty)
+            const SizedBox(height: 6),
 
           Text("Responsibility : ${point.responsibility}"),
 

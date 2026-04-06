@@ -1,0 +1,116 @@
+[
+  {
+    "_id": "69b333e04393ae6afcce5f37",
+    "username": "Avinash",
+    "email": "avinash@gmai.com",
+    "password": "$2b$10$wboKWYEUU3AElELaFSTJkO87sTBbU0DRXl9L9dMMMMQ.Z8d1gxjZa",
+    "createdAt": "2026-03-12T21:45:04.903Z",
+    "updatedAt": "2026-03-13T20:11:45.943Z",
+    "__v": 0
+  },
+  {
+    "_id": "69b34c580346aafb8e52145e",
+    "username": "Vivek",
+    "email": "vivek@gmail.com",
+    "password": "$2b$10$bAaCaZ1gVTssb5HfbFkSSeiboxibJfvbUTI.3LILWuZ8PfqI881Ei",
+    "createdAt": "2026-03-12T23:29:28.595Z",
+    "updatedAt": "2026-04-06T12:50:28.277Z",
+    "__v": 0,
+    "emailVerificationOTP": "414873",
+    "emailVerificationOTPExpiry": "2026-04-06T13:00:28.266Z",
+    "isEmailVerified": false,
+    "mobile": "124567891"
+  },
+  {
+    "_id": "69b3d552890df9d29a3e7749",
+    "username": "Aman Gupta",
+    "email": "aman.gupta@gmail.com",
+    "password": "$2b$10$gazNbLwvrpr0cyMZFKjDHuLAnyokSA2icP3RAzlSu6CrIuEZnN0FK",
+    "createdAt": "2026-03-13T09:13:54.677Z",
+    "updatedAt": "2026-03-13T09:13:54.677Z",
+    "__v": 0
+  },
+  {
+    "_id": "69c7d55a0152e34c4c3b469d",
+    "username": "Avinash Chate",
+    "email": "chateavinash123@gmail.com",
+    "password": "$2b$10$Hsc3bMt3s97y.wzR437gRee.enD.DYlQGk5Mb8ofon5jsnPkAzaUW",
+    "mobile": "7058061264",
+    "isEmailVerified": true,
+    "createdAt": "2026-03-28T13:19:22.967Z",
+    "updatedAt": "2026-03-28T19:20:06.448Z",
+    "__v": 0
+  },
+  {
+    "_id": "69c818f2b203378291f363f0",
+    "username": "Gopal Sonune",
+    "email": "gopalsonune3010@gmail.com",
+    "password": "$2b$10$PakILs1nGK6PUBtRie/FJut2NDlB8idlsgj8Bw/D/VX2scgpWGv2e",
+    "mobile": "7058061264",
+    "isEmailVerified": false,
+    "emailVerificationOTP": "317247",
+    "emailVerificationOTPExpiry": "2026-03-28T18:17:46.860Z",
+    "createdAt": "2026-03-28T18:07:46.887Z",
+    "updatedAt": "2026-03-28T18:07:46.887Z",
+    "__v": 0
+  },
+  {
+    "_id": "69c81958b203378291f363f3",
+    "username": "shaun",
+    "email": "musicalbro123@gmail.com",
+    "password": "$2b$10$vnpKqTy8MvGMROanZdnCh.nxzGy7H6a87FCFOknFe/zxoNfR6s9ry",
+    "mobile": "7841031264",
+    "isEmailVerified": true,
+    "createdAt": "2026-03-28T18:09:28.361Z",
+    "updatedAt": "2026-03-28T18:09:53.408Z",
+    "__v": 0
+  },
+  {
+    "_id": "69c82b01263dbf1e6a0c1e98",
+    "username": "C",
+    "email": "avinashchate676@gmail.com",
+    "password": "$2b$10$n.uSiO40dOsl.AwR8WQNTO9sCqujQ8axDLj.AvH5H7FydihLpr9bS",
+    "mobile": "7058061264",
+    "isEmailVerified": true,
+    "createdAt": "2026-03-28T19:24:49.567Z",
+    "updatedAt": "2026-03-28T19:25:26.617Z",
+    "__v": 0
+  },
+  {
+    "_id": "69cd5628b4dc876e8bc00980",
+    "username": "Gopal",
+    "email": "chateavinash1234@gmail.com",
+    "password": "$2b$10$eh5c/0odrRt2.tz9MRFs..nytLKT0c2xc29x77GhXzA.1a6YuJFIu",
+    "mobile": "7058061264",
+    "isEmailVerified": true,
+    "createdAt": "2026-04-01T17:30:16.267Z",
+    "updatedAt": "2026-04-01T17:30:42.550Z",
+    "__v": 0
+  },
+  {
+    "_id": "69d3a2503bae13234d67a56d",
+    "username": "Vivek Bhise",
+    "email": "vivekbhise@gmail.com",
+    "password": "$2b$10$cAhKfwJ5721lpuLK3E/PmeL5ZDg.9Se.XCfyvnVo0I31Ze3Qcex3y",
+    "mobile": "8830343243",
+    "isEmailVerified": false,
+    "emailVerificationOTP": "555872",
+    "emailVerificationOTPExpiry": "2026-04-06T12:19:42.667Z",
+    "createdAt": "2026-04-06T12:08:48.427Z",
+    "updatedAt": "2026-04-06T12:09:42.668Z",
+    "__v": 0
+  },
+  {
+    "_id": "69d3ace8c78ec9aa604c5053",
+    "username": "testuser12349",
+    "email": "testuser12349@example.com",
+    "password": "$2b$10$/y0v5xxPKzyc0Gvd/dqAjueWdGfiY7c0wDe9KZNM/bFMgKYTAGwby",
+    "mobile": "",
+    "isEmailVerified": false,
+    "emailVerificationOTP": "532638",
+    "emailVerificationOTPExpiry": "2026-04-06T13:04:00.562Z",
+    "createdAt": "2026-04-06T12:54:00.563Z",
+    "updatedAt": "2026-04-06T12:54:00.563Z",
+    "__v": 0
+  }
+]

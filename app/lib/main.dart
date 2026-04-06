@@ -5,7 +5,8 @@ import 'screens/meetings_screen.dart';
 import 'screens/tasks_screen.dart';
 import 'screens/analytics_screen.dart';
 import 'screens/settings_screen.dart';
-import 'services/notification_service.dart'; // ← ADD THIS
+import 'services/notification_service.dart';
+import 'services/auth_service.dart';
 
 void main() {
   runApp(const SmartMoMApp());
@@ -34,7 +35,10 @@ class _SmartMoMAppState extends State<SmartMoMApp> {
           ? AppShell(
               darkMode: _darkMode,
               onToggleTheme: () => setState(() => _darkMode = !_darkMode),
-              onLogout: () => setState(() => _loggedIn = false),
+              onLogout: () async {
+                await AuthService.logout();
+                setState(() => _loggedIn = false);
+              },
             )
           : LoginScreen(
               onLogin: () => setState(() => _loggedIn = true),
@@ -180,6 +184,7 @@ class _AppShellState extends State<AppShell> {
 
                 /// THEME
                 IconButton(
+                  key: const ValueKey('theme_button'),
                   tooltip: widget.darkMode ? 'Light Mode' : 'Dark Mode',
                   icon: Icon(
                     widget.darkMode ? Icons.light_mode : Icons.dark_mode,

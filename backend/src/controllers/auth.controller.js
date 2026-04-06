@@ -17,7 +17,8 @@ function signToken(userId) {
 
 async function registerUser(req, res) {
   try {
-    const { username, email, password, mobile } = req.body;
+    let { username, email, password, mobile } = req.body;
+    if (email) email = email.toLowerCase();
 
     if (!username || !email || !password) {
       return res.status(400).json({ message: "All fields required" });
@@ -36,34 +37,27 @@ async function registerUser(req, res) {
       return res.status(400).json({ message: "Invalid mobile number format" });
     }
 
-    const existing = await User.findOne({ $or: [{ username }, { email }] });
+    const existingVerified = await User.findOne({
+      email,
+      isEmailVerified: true
+    });
 
-    if (existing) {
-      if (existing.isEmailVerified) {
-        return res.status(409).json({ message: "User already exists" });
-      }
-
-      const otp    = generateOTP();
-      const expiry = new Date(Date.now() + 10 * 60 * 1000);
-
-      existing.emailVerificationOTP       = otp;
-      existing.emailVerificationOTPExpiry = expiry;
-      if (mobile) existing.mobile         = mobile;
-
-      await existing.save();
-      await sendVerificationOTP(email, username, otp);
-
-      return res.status(200).json({
-        message: "OTP resent. Please verify your email.",
-        email
-      });
+    if (existingVerified) {
+      return res.status(409).json({ message: "User already exists with this email" });
     }
+
+    // Safely wipe out any uncompleted/unverified registration attempts 
+    // that might be hoarding this email in the DB.
+    await User.deleteMany({
+      email,
+      isEmailVerified: false
+    });
 
     const hash   = await bcrypt.hash(password, 10);
     const otp    = generateOTP();
     const expiry = new Date(Date.now() + 10 * 60 * 1000);
 
-    await User.create({
+    const newUser = await User.create({
       username,
       email,
       password: hash,
@@ -76,7 +70,7 @@ async function registerUser(req, res) {
     await sendVerificationOTP(email, username, otp);
 
     res.status(201).json({
-      message: "Registration successful. Please verify your email with the OTP sent.",
+      message: "Registration started. Please verify your email with the OTP sent.",
       email
     });
 
@@ -90,7 +84,8 @@ async function registerUser(req, res) {
 
 async function verifyEmail(req, res) {
   try {
-    const { email, otp } = req.body;
+    let { email, otp } = req.body;
+    if (email) email = email.toLowerCase();
 
     if (!email || !otp) {
       return res.status(400).json({ message: "Email and OTP are required" });
@@ -145,7 +140,8 @@ async function verifyEmail(req, res) {
 
 async function resendOTP(req, res) {
   try {
-    const { email } = req.body;
+    let { email } = req.body;
+    if (email) email = email.toLowerCase();
 
     if (!email) {
       return res.status(400).json({ message: "Email is required" });
@@ -184,7 +180,8 @@ async function resendOTP(req, res) {
 
 async function LoginUser(req, res) {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    if (email) email = email.toLowerCase();
 
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password required" });
@@ -243,7 +240,8 @@ function logout(req, res) {
 
 async function forgotPassword(req, res) {
   try {
-    const { email } = req.body;
+    let { email } = req.body;
+    if (email) email = email.toLowerCase();
 
     if (!email) {
       return res.status(400).json({ message: "Email is required" });
@@ -283,7 +281,8 @@ async function forgotPassword(req, res) {
 
 async function verifyResetOtp(req, res) {
   try {
-    const { email, otp } = req.body;
+    let { email, otp } = req.body;
+    if (email) email = email.toLowerCase();
 
     if (!email || !otp) {
       return res.status(400).json({ message: "Email and OTP are required" });
@@ -329,7 +328,8 @@ async function verifyResetOtp(req, res) {
 
 async function resetPassword(req, res) {
   try {
-    const { email, resetToken, newPassword } = req.body;
+    let { email, resetToken, newPassword } = req.body;
+    if (email) email = email.toLowerCase();
 
     if (!email || !resetToken || !newPassword) {
       return res.status(400).json({ message: "All fields are required" });

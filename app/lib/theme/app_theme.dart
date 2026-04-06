@@ -253,8 +253,7 @@ class AppTheme {
 
       cardTheme: CardThemeData(
         color: Colors.white,
-        elevation: 2,
-        shadowColor: const Color(0x1A7C3AED),
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -264,6 +263,8 @@ class AppTheme {
         fillColor: const Color(0xFFF8F6FF),
         labelStyle: const TextStyle(color: Color(0xFF6B6B88)),
         hintStyle: const TextStyle(color: Color(0xFF9999BB)),
+        prefixIconColor: const Color(0xFF6B6B88),
+        suffixIconColor: const Color(0xFF6B6B88),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Color(0xFFDDDDEE)),
@@ -276,18 +277,82 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.error),
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
-          elevation: 2,
-          shadowColor: const Color(0x407C3AED),
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: const Color(0xFF6B6B88),
+          side: const BorderSide(color: Color(0xFFDDDDEE)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primary,
+        ),
+      ),
+      iconTheme: const IconThemeData(color: Color(0xFF6B6B88)),
+      dividerTheme: const DividerThemeData(
+        color: Color(0xFFDDDDEE),
+        thickness: 1,
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return AppColors.primary;
+          }
+          return Colors.transparent;
+        }),
+        checkColor: MaterialStateProperty.all(Colors.white),
+        side: const BorderSide(color: Color(0xFFDDDDEE), width: 2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        titleTextStyle: const TextStyle(
+          color: Color(0xFF1A1A2E),
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+        contentTextStyle: const TextStyle(
+          color: Color(0xFF6B6B88),
+          fontSize: 14,
+        ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: const Color(0xFF1A1A2E),
+        contentTextStyle: const TextStyle(color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        behavior: SnackBarBehavior.floating,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
@@ -297,6 +362,11 @@ class AppTheme {
           color: Color(0xFF1A1A2E),
           fontSize: 18,
           fontWeight: FontWeight.w600,
+        ),
+      ),
+      dropdownMenuTheme: const DropdownMenuThemeData(
+        menuStyle: MenuStyle(
+          backgroundColor: MaterialStatePropertyAll(Colors.white),
         ),
       ),
     );
