@@ -49,5 +49,8 @@ app.use("/api/notifications", notificationRoutes);
 
 app.use(errorHandler);
 
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
 
 module.exports = app;

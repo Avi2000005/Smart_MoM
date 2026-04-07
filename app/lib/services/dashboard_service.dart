@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardService {
 
-  static const baseUrl = "https://smart-mom.onrender.com/dashboard";
+  static const baseUrl = "http://127.0.0.1:5000/api/dashboard";
 
   static Future<Map<String, dynamic>> getDashboard() async {
 

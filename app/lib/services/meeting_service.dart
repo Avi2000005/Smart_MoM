@@ -3,7 +3,7 @@ import 'api_service.dart';
 
 class MeetingService {
 
-  static const String baseUrl = "https://smart-mom.onrender.com/meetings";
+  static const String baseUrl = "http://127.0.0.1:5000/api/meetings";
 
   static Future getMeetings() async {
     return await ApiService.get("meetings");
