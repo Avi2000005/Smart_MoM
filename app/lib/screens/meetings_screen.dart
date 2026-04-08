@@ -11,6 +11,7 @@ import 'meeting_detail_modal.dart';
 
 import '../services/api_service.dart';
 import '../services/download_service.dart';
+import 'package:open_filex/open_filex.dart';
 
 
 class MeetingsScreen extends StatefulWidget {
@@ -166,8 +167,17 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
 
   if (savedPath != null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("PDF Saved to: $savedPath")),
+      SnackBar(content: Text("PDF Saved! Trying to open...")),
     );
+    
+    final result = await OpenFilex.open(savedPath);
+    if (result.type != ResultType.done) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Could not open PDF: ${result.message}")),
+        );
+      }
+    }
   }
 
 }

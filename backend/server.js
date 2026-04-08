@@ -1,4 +1,5 @@
 require("dotenv").config();
+axios = require("axios"); 
 
 const app = require("./src/app");
 const connectDB = require("./src/db/db");

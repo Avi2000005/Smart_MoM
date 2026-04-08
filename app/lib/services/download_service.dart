@@ -11,7 +11,7 @@ class DownloadService {
   static Future<void> _initNotifications() async {
     if (_initialized) return;
 
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidInit = AndroidInitializationSettings('ic_launcher');
     const iosInit = DarwinInitializationSettings();
     const initSettings = InitializationSettings(
       android: androidInit,
@@ -27,11 +27,12 @@ class DownloadService {
 
   static Future<bool> _requestPermissions() async {
     if (Platform.isAndroid || Platform.isIOS) {
-      await Permission.notification.request();
+      try {
+        await Permission.notification.request();
+      } catch (_) {} // Ignore if notification request fails
     }
-    if (Platform.isAndroid) {
-      await Permission.storage.request();
-    }
+    // We no longer request storage permission as we use getApplicationDocumentsDirectory
+    // which does not require any permissions and avoids hanging on Android 13+.
     return true;
   }
 
@@ -45,22 +46,29 @@ class DownloadService {
 
       String savePath;
 
-      if (Platform.isAndroid) {
-        savePath = '/storage/emulated/0/Download/$fileName.pdf';
-      } else if (Platform.isIOS) {
+      // Sanitize the filename to avoid file system exceptions
+      final sanitizedFileName = fileName.replaceAll(RegExp(r'[\\/:*?"<>|]'), '');
+
+      if (Platform.isAndroid || Platform.isIOS) {
         final dir = await getApplicationDocumentsDirectory();
-        savePath = '${dir.path}/$fileName.pdf';
+        savePath = '${dir.path}/$sanitizedFileName.pdf';
       } else {
         final dir = await getDownloadsDirectory();
-        savePath = '${dir?.path ?? ""}/$fileName.pdf';
+        savePath = '${dir?.path ?? ""}/$sanitizedFileName.pdf';
       }
 
-      final dio = Dio();
+      final dio = Dio(
+        BaseOptions(
+           connectTimeout: const Duration(seconds: 30),
+           receiveTimeout: const Duration(seconds: 45),
+        )
+      );
       await dio.download(url, savePath);
-      await _showNotification('Download Complete', 'Saved $fileName.pdf');
+      await _showNotification('Download Complete', 'Saved $sanitizedFileName.pdf');
       return savePath;
     } catch (e) {
-      await _showNotification('Download Failed', 'Could not download meeting PDF.');
+      print("PDF Download Error: $e");
+      await _showNotification('Download Failed', 'Error: ${e.toString()}');
       return null;
     }
   }
