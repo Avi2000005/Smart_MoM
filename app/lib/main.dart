@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/app_theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/meetings_screen.dart';
@@ -22,9 +23,39 @@ class SmartMoMApp extends StatefulWidget {
 class _SmartMoMAppState extends State<SmartMoMApp> {
   bool _darkMode = true;
   bool _loggedIn = false;
+  bool _loadingAuth = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+    if (mounted) {
+      setState(() {
+        _loggedIn = token != null && token.isNotEmpty;
+        _loadingAuth = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_loadingAuth) {
+      return MaterialApp(
+        title: 'Smart MoM',
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
+        debugShowCheckedModeBanner: false,
+        home: const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
     return MaterialApp(
       title: 'Smart MoM',
       debugShowCheckedModeBanner: false,
@@ -110,8 +141,9 @@ class _AppShellState extends State<AppShell> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      body: Column(
-        children: [
+      body: SafeArea(
+        child: Column(
+          children: [
 
           /// HEADER
           Container(
@@ -242,7 +274,7 @@ class _AppShellState extends State<AppShell> {
           Expanded(child: _body),
         ],
       ),
-    );
+    ));
   }
 }
 

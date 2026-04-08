@@ -73,21 +73,27 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
           const SizedBox(width:12),
 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-              Text(
-                value.toString(),
-                style: const TextStyle(
-                    fontSize:22,
-                    fontWeight: FontWeight.bold
+                Text(
+                  value.toString(),
+                  style: const TextStyle(
+                      fontSize:22,
+                      fontWeight: FontWeight.bold
+                  ),
                 ),
-              ),
 
-              Text(title,style: const TextStyle(color: Colors.grey))
+                Text(
+                  title,
+                  style: const TextStyle(color: Colors.grey),
+                  overflow: TextOverflow.ellipsis,
+                )
 
-            ],
+              ],
+            ),
           )
 
         ],
@@ -239,7 +245,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
       child: SingleChildScrollView(
 
-        child: DataTable(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
 
           columns: const [
 
@@ -271,6 +279,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           }).toList(),
 
         ),
+        ),
       ),
     );
 
@@ -294,125 +303,110 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           children: [
 
             /// METRIC CARDS
-            Row(
-              children: [
-
-                Expanded(child: statCard(
-                    "Meetings",
-                    data["totalMeetings"],
-                    Icons.calendar_month,
-                    Colors.blue
-                )),
-
-                const SizedBox(width:16),
-
-                Expanded(child: statCard(
-                    "Tasks",
-                    data["totalTasks"],
-                    Icons.task,
-                    Colors.orange
-                )),
-
-                const SizedBox(width:16),
-
-                Expanded(child: statCard(
-                    "Completed",
-                    data["completedTasks"],
-                    Icons.check,
-                    Colors.green
-                )),
-
-                const SizedBox(width:16),
-
-                Expanded(child: statCard(
-                    "Pending",
-                    data["pendingTasks"],
-                    Icons.pending,
-                    Colors.red
-                )),
-
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth < 600) {
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(child: statCard("Meetings", data["totalMeetings"], Icons.calendar_month, Colors.blue)),
+                          const SizedBox(width:16),
+                          Expanded(child: statCard("Tasks", data["totalTasks"], Icons.task, Colors.orange)),
+                        ],
+                      ),
+                      const SizedBox(height:16),
+                      Row(
+                        children: [
+                          Expanded(child: statCard("Completed", data["completedTasks"], Icons.check, Colors.green)),
+                          const SizedBox(width:16),
+                          Expanded(child: statCard("Pending", data["pendingTasks"], Icons.pending, Colors.red)),
+                        ],
+                      ),
+                    ],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: statCard("Meetings", data["totalMeetings"], Icons.calendar_month, Colors.blue)),
+                    const SizedBox(width:16),
+                    Expanded(child: statCard("Tasks", data["totalTasks"], Icons.task, Colors.orange)),
+                    const SizedBox(width:16),
+                    Expanded(child: statCard("Completed", data["completedTasks"], Icons.check, Colors.green)),
+                    const SizedBox(width:16),
+                    Expanded(child: statCard("Pending", data["pendingTasks"], Icons.pending, Colors.red)),
+                  ],
+                );
+              },
             ),
 
             const SizedBox(height:30),
 
             /// CHARTS
-            Row(
-
-              crossAxisAlignment: CrossAxisAlignment.start,
-
-              children: [
-
-                /// DONUT
-                Expanded(
-                  child: Container(
-
-                    padding: const EdgeInsets.all(20),
-
-                    decoration: BoxDecoration(
-                      color: const Color(0xff1f1f38),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-
-                    child: Column(
-
-                      children: [
-
-                        const Text(
-                          "Task Completion",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-
-                        const SizedBox(height:20),
-
-                        SizedBox(
-                          height:260,
-                          child: completionChart(),
-                        ),
-
-                        const SizedBox(height:15),
-
-                        legend(),
-
-                      ],
-                    ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final donutChartSection = Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff1f1f38),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-
-                const SizedBox(width:20),
-
-                /// PARTICIPANTS
-                Expanded(
-                  child: Container(
-
-                    padding: const EdgeInsets.all(20),
-
-                    decoration: BoxDecoration(
-                      color: const Color(0xff1f1f38),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-
-                    child: Column(
-
-                      crossAxisAlignment: CrossAxisAlignment.start,
-
-                      children: [
-
-                        const Text(
-                          "Top Participants",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-
-                        const SizedBox(height:10),
-
-                        participantChart(),
-
-                      ],
-                    ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Task Completion",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height:20),
+                      SizedBox(
+                        height:260,
+                        child: completionChart(),
+                      ),
+                      const SizedBox(height:15),
+                      legend(),
+                    ],
                   ),
-                ),
+                );
 
-              ],
+                final participantChartSection = Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff1f1f38),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Top Participants",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height:10),
+                      participantChart(),
+                    ],
+                  ),
+                );
+
+                if (constraints.maxWidth < 800) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      donutChartSection,
+                      const SizedBox(height:20),
+                      participantChartSection,
+                    ],
+                  );
+                }
+                
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: donutChartSection),
+                    const SizedBox(width:20),
+                    Expanded(child: participantChartSection),
+                  ],
+                );
+              },
             ),
 
             const SizedBox(height:30),

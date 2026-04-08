@@ -10,6 +10,7 @@ import 'create_meeting_screen.dart';
 import 'meeting_detail_modal.dart';
 
 import '../services/api_service.dart';
+import '../services/download_service.dart';
 
 
 class MeetingsScreen extends StatefulWidget {
@@ -148,15 +149,25 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
   /// EXPORT PDF
  Future<void> _exportMeeting(Meeting meeting) async {
 
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text("Downloading PDF...")),
+  );
+
   final token = await ApiService.getToken();
 
   final url =
-      "http://127.0.0.1:5000/api/meetings/export/${meeting.id}?token=$token";
+      "https://smart-mom.onrender.com/api/meetings/export/${meeting.id}?token=$token";
 
-  final uri = Uri.parse(url);
+  // Replaced url_launcher browser redirect with native background downloading
+  final savedPath = await DownloadService.downloadPDF(
+    url: url,
+    fileName: meeting.title.replaceAll(" ", "_"), // Safe filename
+  );
 
-  if(await canLaunchUrl(uri)){
-    await launchUrl(uri);
+  if (savedPath != null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("PDF Saved to: $savedPath")),
+    );
   }
 
 }

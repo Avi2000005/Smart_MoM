@@ -42,15 +42,15 @@ app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/api/notifications", notificationRoutes);
 
-
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
 
 
 // ---------------- Error Handler ----------------
 
 app.use(errorHandler);
 
-app.get('/ping', (req, res) => {
-  res.status(200).send('pong');
-});
+
 
 module.exports = app;
